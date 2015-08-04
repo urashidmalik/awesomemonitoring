@@ -1,0 +1,7 @@
+---
+# handlers file for elasticsearch
+- name: Restart elasticsearch
+  monit:
+    name=elasticsearch
+    state=restarted
+  sudo: yes

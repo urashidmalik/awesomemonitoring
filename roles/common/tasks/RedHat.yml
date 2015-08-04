@@ -1,0 +1,46 @@
+---
+# tasks file for common
+
+- name: Get Relative Linux Flavor Vars
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Enable EPEL 7 packages
+  yum: name=epel-release state=present
+  
+- name: Install Common packages
+  yum: name='{{item}}' state=present
+  with_items: am_common_packages
+  
+- name: Make sure monit idfile dir exists
+  shell: mkdir -p /var/lib/monit/
+  sudo: yes
+  
+- name: Disable SELinux
+  selinux: state=disabled
+  sudo: yes
+
+- name: Disable iptables if vagrant
+  shell: '{{item}}'
+  with_items:
+    - iptables -F
+    - iptables -X
+    - iptables -t nat -F
+    - iptables -t nat -X
+    - iptables -t mangle -F
+    - iptables -t mangle -X
+    - iptables -P INPUT ACCEPT
+    - iptables -P FORWARD ACCEPT
+    - iptables -P OUTPUT ACCEPT
+    - iptables-save 
+  when: ansible_ssh_user == 'vagrant'
+  
+- name: Monit conf file
+  template:
+    src=monitrc.j2
+    dest='{{am_monit.monitrc}}'
+    owner=root group=root mode=600
+  notify: Restart monit
+
+- name: Start the ntp service
+  service: name=ntpd state=started enabled=yes
+  tags: ntp

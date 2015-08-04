@@ -1,0 +1,6 @@
+---
+am_elasticsearch: 
+  version: 1.4
+  pid_file: /var/run/elasticsearch.pid
+  http:
+    port: 9200

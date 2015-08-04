@@ -1,0 +1,20 @@
+---
+# Playbook for AwesomeMonitoring
+
+- hosts: all
+  user: root
+  sudo: yes
+  roles :  
+    - { role: common, tags: 'common' } 
+  
+    
+
+- hosts: elasticsearch
+  user: root
+  sudo: yes
+  roles :  
+    - { role: elasticsearch, tags: 'elasticsearch' } 
+
+  
+
+

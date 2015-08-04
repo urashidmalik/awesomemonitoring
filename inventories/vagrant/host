@@ -1,0 +1,6 @@
+[all]
+192.168.56.10 ansible_ssh_user=vagrant
+
+[elasticsearch]
+192.168.56.10 ansible_ssh_user=vagrant
+

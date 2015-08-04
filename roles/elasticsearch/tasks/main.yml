@@ -1,0 +1,41 @@
+---
+# defaults file for elasticsearch
+
+- name: Install ES apt packages
+  apt: pkg=elasticsearch update_cache=yes state=latest
+  sudo: yes
+  when: ansible_os_family == 'Debian'
+  notify: Restart elasticsearch
+
+- name: Import the Elasticsearch public GPG key into rpm
+  sudo: yes
+  rpm_key: state=present key=https://packages.elastic.co/GPG-KEY-elasticsearch #owner=root group=root
+  
+- name: Create a yum repository for Elasticsearch
+  sudo: yes
+  template: src=elastic.repo.j2 dest=/etc/yum.repos.d/elasticsearch.repo     #mode=0644 owner=root owner=root
+  
+- name: Install Elasticsearch package
+  sudo: yes
+  yum: name=elasticsearch state=present
+
+
+- name: Curator PIP package
+  pip: name=elasticsearch-curator state=latest
+  sudo: yes
+
+- name: ES config file
+  template:
+    src=elasticsearch.yml.j2
+    dest=/etc/elasticsearch/elasticsearch.yml
+    owner=root group=root mode=644
+  sudo: yes
+  notify: Restart elasticsearch
+
+- name: Make monit to look after ES
+  template:
+    src=elasticsearch.monitrc.conf.j2
+    dest='{{ am_monit.monit_conf_dir }}/elasticsearch.monitrc.conf'
+    owner=root group=root mode=644
+  sudo: yes
+  notify: Restart monit

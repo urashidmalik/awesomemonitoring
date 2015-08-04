@@ -1,0 +1,12 @@
+---
+# Common Task for Awesome Monitoring
+
+- name: Include Redhat common tasks
+  include: RedHat.yml
+  when: ansible_os_family == "RedHat"
+  
+#- name: Include Debian common tasks
+#  include: Debian.yml
+#  when: ansible_os_family == "Debian"
+  
+  

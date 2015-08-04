@@ -1,0 +1,28 @@
+---
+am_common_packages:
+    - libselinux-python
+    - python-passlib
+    - python-pip
+    - monit
+    - ntp
+#    - git
+#    - jq
+#    - lsof
+#    - vim
+am_java:
+  flavor: oracle
+  oracle:
+    - oracle-java7-installer
+    - oracle-java7-set-default
+  openjdk:
+    - openjdk-7-jre-headless
+    
+am_monit: 
+  monitrc: /etc/monitrc
+  monit_conf_dir: /etc/monit.d/
+ 
+  
+am_nginx_platform: 
+  nginx_conf_dir: /etc/nginx/conf.d/
+  service_start: /usr/bin/systemctl restart nginx.service
+  service_stop: /usr/bin/systemctl stop nginx.service
